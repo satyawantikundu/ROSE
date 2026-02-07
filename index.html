@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>🌹 Happy Rose Day</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#ff4d6d,#ff8fab);
+  color:white;
+  text-align:center;
+}
+.container{
+  max-width:500px;
+  margin:auto;
+  padding:20px;
+}
+input,button{
+  padding:12px;
+  margin:8px;
+  border-radius:8px;
+  border:none;
+  width:90%;
+}
+button{
+  background:white;
+  color:#ff4d6d;
+  font-weight:bold;
+}
+.card{
+  background:rgba(255,255,255,0.15);
+  padding:20px;
+  border-radius:15px;
+  margin-top:20px;
+}
+img{
+  width:220px;
+  height:220px;
+  object-fit:cover;
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🌹 Happy Rose Day</h1>
+
+<div id="editor">
+<input id="nameInput" placeholder="Partner name">
+<input id="photoName" placeholder="Photo file name (example: riya.jpg)">
+<button onclick="createLink()">Create Wish Link ❤️</button>
+<div id="result"></div>
+</div>
+
+<div id="wishCard" class="card" style="display:none;">
+<h2 id="wishText"></h2>
+<img id="wishPhoto">
+<p>You are as beautiful as a rose 🌹</p>
+</div>
+
+</div>
+
+<script>
+
+function createLink(){
+  const name=document.getElementById("nameInput").value;
+  const photo=document.getElementById("photoName").value;
+
+  if(!name || !photo){
+    alert("Enter name and photo file name");
+    return;
+  }
+
+  const base = window.location.origin + window.location.pathname;
+
+  const link = base+"?name="+encodeURIComponent(name)+"&photo="+encodeURIComponent(photo);
+
+  document.getElementById("result").innerHTML=
+  `<a href="${link}">${link}</a>`;
+}
+
+function loadWish(){
+  const params=new URLSearchParams(window.location.search);
+  const name=params.get("name");
+  const photo=params.get("photo");
+
+  if(name && photo){
+    document.getElementById("editor").style.display="none";
+    document.getElementById("wishCard").style.display="block";
+
+    document.getElementById("wishText").innerText="Happy Rose Day, "+name+" ❤️";
+    document.getElementById("wishPhoto").src=photo;
+  }
+}
+
+loadWish();
+
+</script>
+
+</body>
+</html>
