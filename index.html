@@ -6,40 +6,40 @@
 
 <style>
 body{
-  margin:0;
-  font-family:Arial;
-  background:linear-gradient(135deg,#ff4d6d,#ff8fab);
-  color:white;
-  text-align:center;
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#ff4d6d,#ff8fab);
+color:white;
+text-align:center;
 }
 .container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
+max-width:500px;
+margin:auto;
+padding:20px;
 }
 input,button{
-  padding:12px;
-  margin:8px;
-  border-radius:8px;
-  border:none;
-  width:90%;
+padding:12px;
+margin:8px;
+border-radius:8px;
+border:none;
+width:90%;
 }
 button{
-  background:white;
-  color:#ff4d6d;
-  font-weight:bold;
+background:white;
+color:#ff4d6d;
+font-weight:bold;
 }
 .card{
-  background:rgba(255,255,255,0.15);
-  padding:20px;
-  border-radius:15px;
-  margin-top:20px;
+background:rgba(255,255,255,0.15);
+padding:20px;
+border-radius:15px;
+margin-top:20px;
 }
 img{
-  width:220px;
-  height:220px;
-  object-fit:cover;
-  border-radius:15px;
+width:220px;
+height:220px;
+object-fit:cover;
+border-radius:15px;
 }
 </style>
 </head>
@@ -52,9 +52,8 @@ img{
 
 <div id="editor">
 <input id="nameInput" placeholder="Partner name">
-<input id="photoName" placeholder="Photo file name (example: riya.jpg)">
-<button onclick="createLink()">Create Wish Link ❤️</button>
-<div id="result"></div>
+<input type="file" id="photoInput" accept="image/*">
+<button onclick="createWish()">Create Wish ❤️</button>
 </div>
 
 <div id="wishCard" class="card" style="display:none;">
@@ -67,38 +66,44 @@ img{
 
 <script>
 
-function createLink(){
-  const name=document.getElementById("nameInput").value;
-  const photo=document.getElementById("photoName").value;
+let uploadedImage="";
 
-  if(!name || !photo){
-    alert("Enter name and photo file name");
-    return;
-  }
+document.getElementById("photoInput").addEventListener("change",function(){
+const file=this.files[0];
+const reader=new FileReader();
+reader.onload=e=>uploadedImage=e.target.result;
+reader.readAsDataURL(file);
+});
 
-  const base = window.location.origin + window.location.pathname;
+function createWish(){
+const name=document.getElementById("nameInput").value;
 
-  const link = base+"?name="+encodeURIComponent(name)+"&photo="+encodeURIComponent(photo);
-
-  document.getElementById("result").innerHTML=
-  `<a href="${link}">${link}</a>`;
+if(!name || !uploadedImage){
+alert("Add name and photo first");
+return;
 }
 
-function loadWish(){
-  const params=new URLSearchParams(window.location.search);
-  const name=params.get("name");
-  const photo=params.get("photo");
+// SAVE DATA INSIDE BROWSER (not link)
+localStorage.setItem("roseName",name);
+localStorage.setItem("rosePhoto",uploadedImage);
 
-  if(name && photo){
-    document.getElementById("editor").style.display="none";
-    document.getElementById("wishCard").style.display="block";
-
-    document.getElementById("wishText").innerText="Happy Rose Day, "+name+" ❤️";
-    document.getElementById("wishPhoto").src=photo;
-  }
+showWish(name,uploadedImage);
 }
 
-loadWish();
+function showWish(name,img){
+document.getElementById("editor").style.display="none";
+document.getElementById("wishCard").style.display="block";
+document.getElementById("wishText").innerText="Happy Rose Day, "+name+" ❤️";
+document.getElementById("wishPhoto").src=img;
+}
+
+// LOAD SAVED DATA
+const savedName=localStorage.getItem("roseName");
+const savedPhoto=localStorage.getItem("rosePhoto");
+
+if(savedName && savedPhoto){
+showWish(savedName,savedPhoto);
+}
 
 </script>
 
